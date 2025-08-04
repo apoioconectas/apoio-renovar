@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apoie a Chapa Renovar</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      background: #2d3a2e;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .main-content {
+      max-width: 960px;
+      margin: auto;
+      padding: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+    .slider {
+      width: 300px;
+      overflow: hidden;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .slider img {
+      width: 100%;
+      display: none;
+    }
+    .slider img.active {
+      display: block;
+    }
+    .canvas-area {
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+    }
+    #canvas {
+      border: 1px solid #ccc;
+      max-width: 100%;
+      margin: 1rem 0;
+    }
+    #download-btn {
+      background: #c77b30;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #download-btn:hover {
+      background: #a36628;
+    }
+  </style>
+</head>
+<body>
+  <h1>💚 Apoie a Chapa Renovar Psicologia</h1>
+
+  <div class="main-content">
+    <div class="slider">
+      <img src="https://i.ibb.co/94MfR91/slide1.jpg" class="active" />
+      <img src="https://i.ibb.co/7XHcxTY/slide2.jpg" />
+      <img src="https://i.ibb.co/mq8fDR1/slide3.jpg" />
+    </div>
+
+    <div class="canvas-area">
+      <p><strong>1.</strong> Selecione sua foto</p>
+      <input type="file" id="upload" accept="image/*" />
+      <canvas id="canvas" width="600" height="600"></canvas>
+      <button id="download-btn">Baixar imagem com moldura</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const uploadInput = document.getElementById("upload");
+      const downloadBtn = document.getElementById("download-btn");
+      const frame = new Image();
+      frame.crossOrigin = "anonymous";
+      frame.src = "https://i.ibb.co/F4z9F3V/moldura-renovar.png";
+
+      let userImage = null;
+
+      uploadInput.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          userImage = new Image();
+          userImage.onload = drawCanvas;
+          userImage.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      function drawCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const hRatio = canvas.width / userImage.width;
+        const vRatio = canvas.height / userImage.height;
+        const ratio = Math.min(hRatio, vRatio);
+        const centerX = (canvas.width - userImage.width * ratio) / 2;
+        const centerY = (canvas.height - userImage.height * ratio) / 2;
+        ctx.drawImage(userImage, 0, 0, userImage.width, userImage.height, centerX, centerY, userImage.width * ratio, userImage.height * ratio);
+        ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+      }
+
+      downloadBtn.addEventListener("click", function () {
+        if (!userImage) {
+          alert("Por favor, selecione uma imagem primeiro!");
+          return;
+        }
+        const link = document.createElement("a");
+        link.download = "apoio-chapa-renovar.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+
+      const slides = document.querySelectorAll(".slider img");
+      let current = 0;
+      setInterval(() => {
+        slides[current].classList.remove("active");
+        current = (current + 1) % slides.length;
+        slides[current].classList.add("active");
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
