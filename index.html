@@ -92,7 +92,8 @@
       const downloadBtn = document.getElementById("download-btn");
       const frame = new Image();
       frame.crossOrigin = "anonymous";
-      frame.src = "./moldura-renovar-nova.png";
+      frame.src = "./moldura-renovar-ajustada.png";
+
 
 
       let userImage = null;
@@ -117,7 +118,12 @@
         const centerX = (canvas.width - userImage.width * ratio) / 2;
         const centerY = (canvas.height - userImage.height * ratio) / 2;
         ctx.drawImage(userImage, 0, 0, userImage.width, userImage.height, centerX, centerY, userImage.width * ratio, userImage.height * ratio);
-        ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+        const frameWidth = 480;
+const frameHeight = frame.height * (frameWidth / frame.width);
+const frameX = (canvas.width - frameWidth) / 2;
+const frameY = canvas.height - frameHeight;
+ctx.drawImage(frame, frameX, frameY, frameWidth, frameHeight);
+
       }
 
       downloadBtn.addEventListener("click", function () {
